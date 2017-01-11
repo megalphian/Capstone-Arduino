@@ -17,8 +17,9 @@ void setup() {
 
 // the loop function runs over and over again until power down or reset
 void loop() {
-  for(angle1 = 0, angle2 = 90; angle1 < 180||angle2<180; angle1 += 5)    // command to move from 0 degrees to 180 degrees 
-  {                                  
+  for(angle1 = 0, angle2 = 90; angle1 < 180||angle2<180;)    // command to move from 0 degrees to 180 degrees 
+  { 
+    if(angle1<180) angle1 +=5;                                 
     servo_test[0].write(angle1);                 //command to rotate the servo to the specified angle
     if(angle2<180) angle2 +=5;
     servo_test[1].write(angle2);
@@ -33,8 +34,9 @@ void loop() {
   delay(1000);
 
   //servo_test.write(90);
-  for(angle1 = 180, angle2=180; angle1>=1||angle2>90; angle1-=5)     // command to move from 180 degrees to 0 degrees 
-  {                                
+  for(angle1 = 180, angle2=180; angle1>=1||angle2>90;)     // command to move from 180 degrees to 0 degrees 
+  { 
+    if(angle1>=1) angle1 -=5;                               
     servo_test[0].write(angle1);              //command to rotate the servo to the specified angle
     if(angle2>90) angle2 -=5;
     servo_test[1].write(angle2); 
