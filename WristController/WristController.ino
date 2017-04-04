@@ -105,14 +105,24 @@ void setup(){
   nh.advertise(fsr_pub);
   nh.advertise(fsr_proc);
 
-  //pot_array_raw.layout.dim_length = 1;
+
   pot_array_raw.data_length = 9; 
-  //pot_array.layout.dim_length = 1;
   pot_array.data_length = 9;
-  //fsr_array_raw.layout.dim_length = 1;
   fsr_array_raw.data_length = 5;
-  //fsr_array.layout.dim_length = 1;
   fsr_array.data_length = 5;
+
+  int real_data_storage[9];
+  int real_data_storage1[9];
+  int real_data_storage2[5];
+  int real_data_storage3[5];
+  pot_array_raw.data = real_data_storage;
+  pot_array.data = real_data_storage1;
+  pot_array_raw.data[0] = 123;
+  pot_array.data[0] = 123;
+  fsr_array_raw.data = real_data_storage2;
+  fsr_array.data = real_data_storage3;
+  fsr_array_raw.data[0] = 456;
+  fsr_array.data[0] = 456;
 
   servo[0].attach(2);
   servo[1].attach(3);
@@ -125,16 +135,14 @@ void setup(){
 
 void loop(){
 
-  int temp = 0;
+int temp = 0;
   
-	for(int i = 0; i < 9; i++){
-      //temp = rand() % 90;
-      //Serial.print(temp);
-		pot_array_raw.data[i] = analogRead(i);
+  for(int i = 0; i < 9; i++){
+    pot_array_raw.data[i] = analogRead(i);
     //msg_pub1.data = temp;
-    //chatter_pub1.publish(&msg_pub1);		
-		pot_array.data[i] = pot_array_raw.data[i]*333.0/1024.0; //Conversion function detailed in Datasheet
-		}
+    //chatter_pub1.publish(&msg_pub1);    
+    pot_array.data[i] = pot_array_raw.data[i]*333.0/1024.0; //Conversion function detailed in Datasheet
+    }
    pot_pub.publish(&pot_array_raw);
    pot_proc.publish(&pot_array);
 
@@ -148,6 +156,7 @@ void loop(){
 		}
    fsr_pub.publish(&fsr_array_raw);
    fsr_proc.publish(&fsr_array);		
+
   nh.spinOnce();
   delay(500);
 }
@@ -162,8 +171,58 @@ int fsrVolt2Grams(float voltage){
 }
 
 //We average the analog reading to eliminate some of the noise
-int averageAnalog(int pin){
- int v=0;
-      for(int i=0; i<4; i++) v+= analogRead(pin);
-      return v/4;
+int potVolt2Degree(int raw_value){
+  int out = 0;
+  out = raw_value*333.0/1024.0; //Conversion function detailed in Datasheet
+  return out;
 }
+
+
+
+
+/*  
+ *   Deleted Code Snippets
+ *   
+ *   
+ *   
+ *   
+ *   int temp = 0;
+
+    
+    pot_array_raw.adc0 = analogRead(0);
+    pot_array.data[0] = potVolt2Degree(pot_array_raw.adc0);
+    
+    pot_array_raw.adc1 = analogRead(1);  
+    pot_array.data[1] = potVolt2Degree(pot_array_raw.adc1);
+    
+    pot_array_raw.adc2 = analogRead(2);  
+    pot_array.data[2] = potVolt2Degree(pot_array_raw.adc2);
+
+    pot_array_raw.adc3 = analogRead(3);  
+    pot_array.data[3] = potVolt2Degree(pot_array_raw.adc3);
+
+    pot_array_raw.adc4 = analogRead(4);  
+    pot_array.data[4] = potVolt2Degree(pot_array_raw.adc4);
+
+    pot_array_raw.adc5 = analogRead(5);  
+    pot_array.data[5] = potVolt2Degree(pot_array_raw.adc5);
+
+    //pot_array_raw.adc6 = analogRead(6);  
+    //pot_array.data[6] = potVolt2Degree(pot_array_raw.data[6]);
+
+    //pot_array_raw.adc7 = analogRead(7);  
+    //pot_array.data[7] = potVolt2Degree(pot_array_raw.data[7]);
+
+    //pot_array_raw.adc8 = analogRead(8);  
+    //pot_array.data[8] = potVolt2Degree(pot_array_raw.data[8]);
+
+    
+   pot_pub.publish(&pot_array_raw);
+   pot_proc.publish(&pot_array);
+
+
+      //temp = rand() % 90;
+      //Serial.print(temp);
+
+   
+*/
